@@ -7,6 +7,19 @@ from lifxlan import LifxLAN
 from copy import copy
 import sys
 
+RED = [65535, 65535, 65535, 3500]
+ORANGE = [6500, 65535, 65535, 3500]
+YELLOW = [9000, 65535, 65535, 3500]
+GREEN = [16173, 65535, 65535, 3500]
+CYAN = [29814, 65535, 65535, 3500]
+BLUE = [43634, 65535, 65535, 3500]
+PURPLE = [50486, 65535, 65535, 3500]
+PINK = [58275, 65535, 47142, 3500]
+WHITE = [58275, 0, 65535, 5500]
+COLD_WHITE = [58275, 0, 65535, 9000]
+WARM_WHITE = [58275, 0, 65535, 3200]
+GOLD = [58275, 0, 65535, 2500]
+
 acksound = '/home/pi/Downloads/computer.mp3'
 
 global base_location
@@ -68,8 +81,8 @@ def on_message(client, userdata, msg):
         print('[{}] - {}: {} '.format(time_now(), msg.topic, msg.payload))
         pygame.init()
         pygame.mixer.init()
-        pygame.mixer.music.load(acksound)
-        pygame.mixer.music.play()
+        #pygame.mixer.music.load(acksound)
+        #pygame.mixer.music.play()
         
     else:
         slots = parse_slots(msg) 
@@ -90,7 +103,7 @@ def on_message(client, userdata, msg):
     elif msg.topic == 'hermes/intent/lightsTurnDown':
          glist = group_split(slots)
          room = slots.get("house_room")
-         response = 'Turning lights down'
+         response = 'Turning lights down' 
          say (session_id, response)    
          for index, item in enumerate(glist, start=0):
               color = item.get_color()
@@ -104,9 +117,18 @@ def on_message(client, userdata, msg):
      
          
            colour = slots.get("colour")
-      
+           
+           if colour == 'red':
+               for index, item in enumerate(devices, start=0):
+                    item.set_color(RED,500, rapid=True)
+                    
+           if colour == 'orange':
+               for index, item in enumerate(devices, start=0):
+                    item.set_color(ORANGE,500, rapid=True)
 
-
+           if colour == 'blue':
+               for index, item in enumerate(devices, start=0):
+                    item.set_color(BLUE,500, rapid=True)         
 
            if colour == 'warm white':
                 temp = 2700
@@ -114,14 +136,14 @@ def on_message(client, userdata, msg):
                     color = item.get_color()
                     HSBK = list(color)              
                     HSBK[3] = temp
-                    item.set_color(HSBK,500, rapid=True)
-           if colour == 'cool white':
+                    item.set_color(WARM_WHITE,500, rapid=True)
+           if colour == 'cool white':         
                 temp = 6000
                 for index, item in enumerate(devices, start=0):
                     color = item.get_color()
                     HSBK = list(color)              
                     HSBK[3] = temp
-                    item.set_color(HSBK,500, rapid=True)
+                    item.set_color(WARM_WHITE,500, rapid=True)
 
 
            
@@ -154,7 +176,7 @@ def on_message(client, userdata, msg):
                  response = 'Turning lights off in the ' + str(room)
                  say (session_id, response)
          else:        
-                 response = 'Turning lights on'
+                 response = 'Turning lights off'
                  say (session_id, response)
          for index, item in enumerate(glist, start=0):
                item.set_power("off", rapid=True)
