@@ -8,8 +8,7 @@ from copy import copy
 import sys
 
 acksound = '/home/pi/Downloads/computer.mp3'
-lifx_auth = 'c3d6d0ee501bf70f40ad7722a2907fa126b2dadc6a160bd7debb6fd7b4ad905d'
-location = "Englefield Road"
+
 global base_location
 base_location = location
 
